@@ -1,0 +1,43 @@
+# Default values — can override when deploy
+replicaCount: 1
+
+image:
+  repository: learnhub-user  # image name (will change to ECR URL when in production)
+  tag: latest                    # Tag will be updated by CI/CD to git SHA
+  pullPolicy: IfNotPresent       # IfNotPresent: only pull if not in node
+
+service:
+  type: ClusterIP  # ClusterIP: only accessible in cluster
+  port: 8082
+
+resources:
+  requests:         # Minimum resources K8s needs reserve for pod
+    memory: "256Mi"
+    cpu: "250m"     # 250m = 0.25 CPU core
+  limits:           # Maximum resources pod can use
+    memory: "512Mi"
+    cpu: "500m"
+
+env:
+  # this is placeholder — real value put in Secret or ConfigMap
+  SPRING_PROFILES_ACTIVE: "production"
+  DB_URL: "jdbc:postgresql://user-db:5432/user_db"
+  RABBITMQ_HOST: "rabbitmq"
+  REDIS_HOST: "redis"
+
+# Health check config — K8s used to monitor pod
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8082
+  initialDelaySeconds: 60  # Wait 60s after start before beginning checks
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8082
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3

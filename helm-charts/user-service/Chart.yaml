@@ -1,0 +1,6 @@
+apiVersion: v2
+name: user-service
+description: LearnHub User Service - User Management
+type: application
+version: 0.1.0 # chart version (increase when change chart structure)
+appVersion: "1.0.0" # app version (increase when deploy new version)

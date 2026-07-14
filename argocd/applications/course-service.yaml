@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: course-service
+  namespace: argocd  # ArgoCD Application must be in the argocd namespace
+spec:
+  project: default
+
+  # Source: place ArgoCD gets Helm chart
+  source:
+    repoURL: https://github.com/pgkiet27/learnhub-infra.git
+    targetRevision: HEAD  # Always follow the latest commit of the main branch
+    path: helm-charts/course-service  # Directory containing the Helm chart
+
+  # Destination: place to deploy
+  destination:
+    server: https://kubernetes.default.svc  # Current K8s cluster
+    namespace: learnhub
+
+  # Sync policy: way ArgoCD syncs
+  syncPolicy:
+    automated:
+      prune: true    # Automatically delete resources not in Git
+      selfHeal: true # Automatically fix drift if someone edits directly on K8s
+    syncOptions:
+      - CreateNamespace=true  # Automatically create namespace if it doesn't exist
