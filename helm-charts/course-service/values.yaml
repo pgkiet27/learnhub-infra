@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: learnhub-course  # image name (will change to ECR URL when in production)
-  tag: latest                    # Tag will be updated by CI/CD to git SHA
+  tag: 73e5bc690b71073b5f483d073680bfb85409b372
   pullPolicy: IfNotPresent       # IfNotPresent: only pull if not in node
 
 service:
