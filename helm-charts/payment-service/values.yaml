@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: learnhub-payment  # image name (will change to ECR URL when in production)
+  repository: pgkiet27/learnhub-payment  # image name (will change to ECR URL when in production)
   tag: latest                    # Tag will be updated by CI/CD to git SHA
   pullPolicy: IfNotPresent       # IfNotPresent: only pull if not in node
 

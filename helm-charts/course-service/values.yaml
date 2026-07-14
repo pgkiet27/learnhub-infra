@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: learnhub-course  # image name (will change to ECR URL when in production)
+  repository: pgkiet27/learnhub-course  # image name (will change to ECR URL when in production)
   tag: latest                    # Tag will be updated by CI/CD to git SHA
   pullPolicy: IfNotPresent       # IfNotPresent: only pull if not in node
 
