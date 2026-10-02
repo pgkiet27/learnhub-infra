@@ -1,4 +1,5 @@
 # Default values — can override when deploy
+# >1 is safe: the churn job holds a ShedLock lock (table shedlock in enrollment_db)
 replicaCount: 1
 
 image:
@@ -24,6 +25,10 @@ env:
   DB_URL: "jdbc:postgresql://enrollment-db:5432/enrollment_db"
   RABBITMQ_HOST: "rabbitmq"
   REDIS_HOST: "redis"
+  IDENTITY_SERVICE_URL: "http://identity-service:8081"
+  USER_SERVICE_URL: "http://user-service:8082"
+  AI_SERVICE_URL: "http://ai-service:8000"
+  ASSESSMENT_SERVICE_URL: "http://assessment-service:8087"
 
 # Health check config — K8s used to monitor pod
 livenessProbe:

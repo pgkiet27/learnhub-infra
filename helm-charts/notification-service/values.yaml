@@ -1,0 +1,47 @@
+# Default values — can override when deploy
+replicaCount: 1
+
+image:
+  repository: pgkiet27/learnhub-notification  # image name (will change to ECR URL when in production)
+  tag: latest                    # Tag will be updated by CI/CD to git SHA
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8086
+
+resources:
+  requests:
+    memory: "192Mi"
+    cpu: "100m"
+  limits:
+    memory: "384Mi"
+    cpu: "300m"
+
+env:
+  # this is placeholder — real value put in Secret or ConfigMap (SMTP credentials especially)
+  SPRING_PROFILES_ACTIVE: "production"
+  RABBITMQ_HOST: "rabbitmq"
+  IDENTITY_SERVICE_URL: "http://identity-service:8081"
+  USER_SERVICE_URL: "http://user-service:8082"
+  FRONTEND_URL: "https://learnhub.vn"
+  MAIL_HOST: "email-smtp.ap-southeast-1.amazonaws.com"  # Amazon SES SMTP endpoint
+  MAIL_PORT: "587"
+  MAIL_SMTP_AUTH: "true"
+  MAIL_STARTTLS: "true"
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8086
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8086
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3

@@ -1,0 +1,50 @@
+# Default values — can override when deploy
+replicaCount: 1
+
+image:
+  repository: pgkiet27/learnhub-ai  # image name (will change to ECR URL when in production)
+  tag: latest                       # Tag will be updated by CI/CD to git SHA
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP  # only reachable inside the cluster (through api-gateway)
+  port: 8000
+
+resources:
+  requests:
+    memory: "384Mi"   # pandas + scikit-learn + LLM SDKs
+    cpu: "250m"
+  limits:
+    memory: "768Mi"
+    cpu: "1000m"
+
+env:
+  # non-secret settings; DATABASE_URL must point to a PostgreSQL with the pgvector extension
+  DATABASE_URL: "postgresql://ai_user:ai_password@ai-db:5432/ai_db"
+  LLM_PROVIDER: "gemini"
+  EMBEDDING_MODEL: "gemini-embedding-001"
+  GEMINI_MODEL: "gemini-2.5-flash"
+  TOP_K_RESULTS: "3"
+  ENROLLMENT_SERVICE_URL: "http://enrollment-service:8084"
+  COURSE_DB_URL: "postgresql://learnhub:learnhub123@course-db:5432/course_db"  # index_from_course_db.py only
+
+# API keys come from a Secret created outside Git, e.g.:
+#   kubectl -n learnhub create secret generic ai-service-secrets \
+#     --from-literal=GEMINI_API_KEY=... --from-literal=ANTHROPIC_API_KEY=...
+secretName: ai-service-secrets
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 20
+  periodSeconds: 15
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 3
