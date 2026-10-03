@@ -29,6 +29,10 @@ env:
   USER_SERVICE_URL: "http://user-service:8082"
   AI_SERVICE_URL: "http://ai-service:8000"
   ASSESSMENT_SERVICE_URL: "http://assessment-service:8087"
+  # Churn dataset export; enabling it needs an IRSA role with s3:PutObject on <bucket>/churn/*
+  CHURN_EXPORT_ENABLED: "false"
+  CHURN_EXPORT_BUCKET: "learnhub-ml-abc123"
+  AWS_REGION: "us-east-1"
 
 # Health check config — K8s used to monitor pod
 livenessProbe:

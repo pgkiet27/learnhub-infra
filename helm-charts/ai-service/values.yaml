@@ -27,6 +27,10 @@ env:
   TOP_K_RESULTS: "3"
   ENROLLMENT_SERVICE_URL: "http://enrollment-service:8084"
   COURSE_DB_URL: "postgresql://learnhub:learnhub123@course-db:5432/course_db"  # index_from_course_db.py only
+  # "sagemaker" needs an IRSA role with sagemaker:InvokeEndpoint on the endpoint below
+  CHURN_MODEL_BACKEND: "local"
+  CHURN_SAGEMAKER_ENDPOINT: "learnhub-churn"
+  AWS_REGION: "us-east-1"
 
 # API keys come from a Secret created outside Git, e.g.:
 #   kubectl -n learnhub create secret generic ai-service-secrets \
