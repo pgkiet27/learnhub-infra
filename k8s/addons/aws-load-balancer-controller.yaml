@@ -1,0 +1,10 @@
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi

@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+  namespace: learnhub
+  labels:
+    app: jaeger
+spec:
+  selector:
+    app: jaeger
+  ports:
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+    - name: ui
+      port: 16686
+      targetPort: 16686
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+  namespace: learnhub
+  labels:
+    app: jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: {{ .Values.jaeger.image }}
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+            - name: MEMORY_MAX_TRACES
+              value: {{ .Values.jaeger.maxTraces | quote }}
+          ports:
+            - containerPort: 4318
+            - containerPort: 16686
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 16686
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.jaeger.resources | nindent 12 }}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: platform-deps
+description: LearnHub platform dependencies - RabbitMQ, Redis, Jaeger
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

@@ -24,7 +24,7 @@ env:
   RABBITMQ_HOST: "rabbitmq"
   IDENTITY_SERVICE_URL: "http://identity-service:8081"
   USER_SERVICE_URL: "http://user-service:8082"
-  FRONTEND_URL: "https://learnhub.vn"
+  FRONTEND_URL: "https://learnhub-edu.site"
   MAIL_HOST: "email-smtp.ap-southeast-1.amazonaws.com"  # Amazon SES SMTP endpoint
   MAIL_PORT: "587"
   MAIL_SMTP_AUTH: "true"

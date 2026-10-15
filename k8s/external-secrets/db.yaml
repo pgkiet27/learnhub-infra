@@ -1,0 +1,133 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: rds-master
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: rds-master
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/master
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: identity-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: identity-service-db
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/identity
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: user-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: user-service-db
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/user
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: course-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: course-service-db
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/course
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: enrollment-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: enrollment-service-db
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/enrollment
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: payment-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: payment-service-db
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/payment
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: assessment-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: assessment-service-db
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/assessment
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: ai-service-db
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: ai-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
+        DATABASE_URL: "postgresql://{{ .DB_USER }}:{{ .DB_PASSWORD }}@postgres:5432/ai_db?sslmode=require"
+  dataFrom:
+    - extract:
+        key: learnhub/prod/db/ai

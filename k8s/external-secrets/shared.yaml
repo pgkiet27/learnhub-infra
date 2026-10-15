@@ -1,0 +1,15 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: learnhub-shared-secrets
+  namespace: learnhub
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+  target:
+    name: learnhub-shared-secrets
+  dataFrom:
+    - extract:
+        key: learnhub/prod/shared

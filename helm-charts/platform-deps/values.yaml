@@ -1,0 +1,31 @@
+sharedSecretName: learnhub-shared-secrets
+
+rabbitmq:
+  image: rabbitmq:3.13-management-alpine
+  storageClass: ""
+  storage: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+redis:
+  image: redis:7-alpine
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+
+jaeger:
+  image: jaegertracing/all-in-one:1.57
+  maxTraces: 10000
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 384Mi
