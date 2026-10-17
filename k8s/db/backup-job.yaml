@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-backup
+  namespace: learnhub
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      serviceAccountName: db-jobs
+      restartPolicy: Never
+      containers:
+        - name: backup
+          image: postgres:17-alpine
+          env:
+            - name: BACKUP_BUCKET
+              value: "<BACKUP_BUCKET>"
+            - name: AWS_REGION
+              value: ap-southeast-1
+          envFrom:
+            - prefix: IDENTITY_
+              secretRef:
+                name: identity-service-db
+            - prefix: USER_
+              secretRef:
+                name: user-service-db
+            - prefix: COURSE_
+              secretRef:
+                name: course-service-db
+            - prefix: ENROLLMENT_
+              secretRef:
+                name: enrollment-service-db
+            - prefix: PAYMENT_
+              secretRef:
+                name: payment-service-db
+            - prefix: ASSESSMENT_
+              secretRef:
+                name: assessment-service-db
+            - prefix: AI_
+              secretRef:
+                name: ai-service-db
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              apk add --no-cache aws-cli >/dev/null
+              export PGHOST=postgres PGSSLMODE=require
+              TS=$(date -u +%Y%m%dT%H%M%SZ)
+              for s in identity user course enrollment payment assessment ai; do
+                S=$(echo "$s" | tr a-z A-Z)
+                eval "U=\${${S}_DB_USER}"
+                eval "P=\${${S}_DB_PASSWORD}"
+                PGUSER="$U" PGPASSWORD="$P" pg_dump -d "${s}_db" -Fc -n public --no-owner --no-privileges -f "/tmp/${s}_db.dump"
+                aws s3 cp "/tmp/${s}_db.dump" "s3://$BACKUP_BUCKET/db/$TS/${s}_db.dump" >/dev/null
+                echo "Backed up ${s}_db"
+              done
+              echo "Backup done: s3://$BACKUP_BUCKET/db/$TS/"

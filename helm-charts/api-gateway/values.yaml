@@ -1,0 +1,51 @@
+replicaCount: 1
+
+image:
+  repository: pgkiet27/learnhub-gateway
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+env:
+  SPRING_PROFILES_ACTIVE: "local"
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+secretNames: []
+
+appSecret:
+  enabled: false
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+  path: /actuator/prometheus
+
+startupProbe: {}

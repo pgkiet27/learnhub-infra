@@ -1,0 +1,35 @@
+replicaCount: 2
+
+image:
+  repository: 084828583507.dkr.ecr.ap-southeast-1.amazonaws.com/learnhub/user-service
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 320Mi
+  limits:
+    cpu: 1000m
+    memory: 640Mi
+
+startupProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: http
+  periodSeconds: 10
+  failureThreshold: 30
+
+env:
+  SPRING_PROFILES_ACTIVE: "production"
+  DB_URL: "jdbc:postgresql://postgres:5432/user_db?sslmode=require"
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  JAEGER_ENDPOINT: "http://jaeger:4318/v1/traces"
+
+secretNames:
+  - learnhub-shared-secrets
+  - user-service-db
+
+serviceMonitor:
+  enabled: true

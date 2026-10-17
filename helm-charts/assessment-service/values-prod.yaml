@@ -1,0 +1,32 @@
+replicaCount: 2
+
+image:
+  repository: 084828583507.dkr.ecr.ap-southeast-1.amazonaws.com/learnhub/assessment-service
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 320Mi
+  limits:
+    cpu: 1000m
+    memory: 640Mi
+
+startupProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: http
+  periodSeconds: 10
+  failureThreshold: 30
+
+env:
+  SPRING_PROFILES_ACTIVE: "production"
+  DB_URL: "jdbc:postgresql://postgres:5432/assessment_db?sslmode=require"
+  JAEGER_ENDPOINT: "http://jaeger:4318/v1/traces"
+  COURSE_SERVICE_URL: "http://course-service:8083"
+  ENROLLMENT_SERVICE_URL: "http://enrollment-service:8084"
+
+secretNames:
+  - assessment-service-db
+
+serviceMonitor:
+  enabled: true

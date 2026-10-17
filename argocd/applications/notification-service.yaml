@@ -2,25 +2,31 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: notification-service
-  namespace: argocd  # ArgoCD Application must be in the argocd namespace
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
-
-  # Source: place ArgoCD gets Helm chart
   source:
     repoURL: https://github.com/pgkiet27/learnhub-infra.git
-    targetRevision: HEAD  # Always follow the latest commit of the main branch
-    path: helm-charts/notification-service  # Directory containing the Helm chart
-
-  # Destination: place to deploy
+    targetRevision: main
+    path: helm-charts/notification-service
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-prod.yaml
   destination:
-    server: https://kubernetes.default.svc  # Current K8s cluster
+    server: https://kubernetes.default.svc
     namespace: learnhub
-
-  # Sync policy: way ArgoCD syncs
   syncPolicy:
     automated:
-      prune: true    # Automatically delete resources not in Git
-      selfHeal: true # Automatically fix drift if someone edits directly on K8s
+      prune: true
+      selfHeal: true
     syncOptions:
-      - CreateNamespace=true  # Automatically create namespace if it doesn't exist
+      - CreateNamespace=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m

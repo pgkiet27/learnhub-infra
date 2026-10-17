@@ -1,0 +1,51 @@
+replicaCount: 1
+
+image:
+  repository: pgkiet27/learnhub-frontend
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources:
+  requests:
+    memory: "192Mi"
+    cpu: "100m"
+  limits:
+    memory: "384Mi"
+    cpu: "500m"
+
+env:
+  API_URL: "http://api-gateway:8080"
+
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  failureThreshold: 3
+
+secretNames: []
+
+appSecret:
+  enabled: false
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+  path: /metrics
+
+startupProbe: {}

@@ -32,10 +32,8 @@ env:
   CHURN_SAGEMAKER_ENDPOINT: "learnhub-churn"
   AWS_REGION: "us-east-1"
 
-# API keys come from a Secret created outside Git, e.g.:
-#   kubectl -n learnhub create secret generic ai-service-secrets \
-#     --from-literal=GEMINI_API_KEY=... --from-literal=ANTHROPIC_API_KEY=...
-secretName: ai-service-secrets
+secretNames:
+  - ai-service-secrets
 
 livenessProbe:
   httpGet:
@@ -52,3 +50,15 @@ readinessProbe:
   initialDelaySeconds: 10
   periodSeconds: 10
   failureThreshold: 3
+
+appSecret:
+  enabled: false
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+  path: /actuator/prometheus
+
+startupProbe: {}

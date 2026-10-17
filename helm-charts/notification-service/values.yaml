@@ -45,3 +45,17 @@ readinessProbe:
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 3
+
+secretNames: []
+
+appSecret:
+  enabled: false
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+  path: /actuator/prometheus
+
+startupProbe: {}

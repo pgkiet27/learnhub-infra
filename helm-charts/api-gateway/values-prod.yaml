@@ -1,0 +1,44 @@
+replicaCount: 2
+
+image:
+  repository: 084828583507.dkr.ecr.ap-southeast-1.amazonaws.com/learnhub/api-gateway
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 320Mi
+  limits:
+    cpu: 1000m
+    memory: 640Mi
+
+startupProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: http
+  periodSeconds: 10
+  failureThreshold: 30
+
+env:
+  SPRING_PROFILES_ACTIVE: "production"
+  FRONTEND_URL: "https://learnhub-edu.site"
+  IDENTITY_SERVICE_URL: "http://identity-service:8081"
+  USER_SERVICE_URL: "http://user-service:8082"
+  COURSE_SERVICE_URL: "http://course-service:8083"
+  ENROLLMENT_SERVICE_URL: "http://enrollment-service:8084"
+  PAYMENT_SERVICE_URL: "http://payment-service:8085"
+  AI_SERVICE_URL: "http://ai-service:8000"
+  ASSESSMENT_SERVICE_URL: "http://assessment-service:8087"
+
+secretNames:
+  - learnhub-shared-secrets
+
+ingress:
+  enabled: true
+  host: api.learnhub-edu.site
+  paths:
+    - /api
+  healthcheckPath: /actuator/health
+  certificateArn: arn:aws:acm:ap-southeast-1:084828583507:certificate/101767d6-3632-427a-97ea-24f7cf91f97b
+
+serviceMonitor:
+  enabled: true

@@ -1,0 +1,18 @@
+replicaCount: 2
+
+image:
+  repository: 084828583507.dkr.ecr.ap-southeast-1.amazonaws.com/learnhub/frontend
+
+secretNames:
+  - frontend-app
+
+appSecret:
+  enabled: true
+
+ingress:
+  enabled: true
+  host: learnhub-edu.site
+  paths:
+    - /
+  healthcheckPath: /api/health
+  certificateArn: arn:aws:acm:ap-southeast-1:084828583507:certificate/101767d6-3632-427a-97ea-24f7cf91f97b

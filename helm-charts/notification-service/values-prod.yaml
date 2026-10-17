@@ -1,0 +1,43 @@
+replicaCount: 2
+
+image:
+  repository: 084828583507.dkr.ecr.ap-southeast-1.amazonaws.com/learnhub/notification-service
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+startupProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: http
+  periodSeconds: 10
+  failureThreshold: 30
+
+env:
+  SPRING_PROFILES_ACTIVE: "production"
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672"
+  JAEGER_ENDPOINT: "http://jaeger:4318/v1/traces"
+  IDENTITY_SERVICE_URL: "http://identity-service:8081"
+  USER_SERVICE_URL: "http://user-service:8082"
+  FRONTEND_URL: "https://learnhub-edu.site"
+  MAIL_HOST: "email-smtp.ap-southeast-1.amazonaws.com"
+  MAIL_PORT: "587"
+  MAIL_SMTP_AUTH: "true"
+  MAIL_STARTTLS: "true"
+  MAIL_FROM: "LearnHub <no-reply@learnhub-edu.site>"
+
+secretNames:
+  - learnhub-shared-secrets
+  - notification-service-app
+
+appSecret:
+  enabled: true
+
+serviceMonitor:
+  enabled: true

@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-restore
+  namespace: learnhub
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      serviceAccountName: db-jobs
+      restartPolicy: Never
+      containers:
+        - name: restore
+          image: postgres:17-alpine
+          env:
+            - name: BACKUP_BUCKET
+              value: "<BACKUP_BUCKET>"
+            - name: AWS_REGION
+              value: ap-southeast-1
+          envFrom:
+            - secretRef:
+                name: rds-master
+            - prefix: IDENTITY_
+              secretRef:
+                name: identity-service-db
+            - prefix: USER_
+              secretRef:
+                name: user-service-db
+            - prefix: COURSE_
+              secretRef:
+                name: course-service-db
+            - prefix: ENROLLMENT_
+              secretRef:
+                name: enrollment-service-db
+            - prefix: PAYMENT_
+              secretRef:
+                name: payment-service-db
+            - prefix: ASSESSMENT_
+              secretRef:
+                name: assessment-service-db
+            - prefix: AI_
+              secretRef:
+                name: ai-service-db
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              apk add --no-cache aws-cli >/dev/null
+              export PGHOST=postgres PGSSLMODE=require
+              LATEST=$(aws s3 ls "s3://$BACKUP_BUCKET/db/" | awk '{print $2}' | sort | tail -1 | tr -d /)
+              echo "Latest backup: ${LATEST:-<none>}"
+              for s in identity user course enrollment payment assessment ai; do
+                S=$(echo "$s" | tr a-z A-Z)
+                eval "U=\${${S}_DB_USER}"
+                eval "P=\${${S}_DB_PASSWORD}"
+                DB="${s}_db"
+                export PGUSER="$MASTER_USER" PGPASSWORD="$MASTER_PASSWORD"
+                psql -d postgres -v ON_ERROR_STOP=1 -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '$U') THEN CREATE ROLE \"$U\" LOGIN PASSWORD '$P'; END IF; END \$\$;"
+                psql -d postgres -c "GRANT \"$U\" TO CURRENT_USER;" >/dev/null 2>&1 || true
+                if ! psql -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = '$DB'" | grep -q 1; then
+                  psql -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE $DB OWNER \"$U\";"
+                fi
+                if [ "$s" = "ai" ]; then
+                  psql -d ai_db -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS vector;"
+                fi
+                if [ -n "$LATEST" ] && aws s3 cp "s3://$BACKUP_BUCKET/db/$LATEST/$DB.dump" "/tmp/$DB.dump" >/dev/null 2>&1; then
+                  PGUSER="$U" PGPASSWORD="$P" pg_restore -d "$DB" --no-owner --no-privileges "/tmp/$DB.dump" \
+                    || echo "WARN: pg_restore reported errors for $DB"
+                  echo "Restored $DB from $LATEST"
+                else
+                  echo "No backup for $DB - empty database"
+                fi
+              done
