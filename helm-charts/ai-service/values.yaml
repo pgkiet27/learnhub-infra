@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: pgkiet27/learnhub-ai  # image name (will change to ECR URL when in production)
-  tag: 10aeee35b0f6791db5e7163a49af18082512dbc5
+  tag: 339b0286eb0a149145f4926277d187f156f5acf5
   pullPolicy: IfNotPresent
 
 service:
