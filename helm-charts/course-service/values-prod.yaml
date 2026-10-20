@@ -29,6 +29,7 @@ env:
   AWS_REGION: "ap-southeast-1"
   AWS_PROFILE: ""
   AWS_S3_BUCKET: "learnhub-media-084828583507"
+  CLOUDFRONT_DOMAIN: "https://d15hsp2tceh4dv.cloudfront.net"
 
 secretNames:
   - learnhub-shared-secrets
