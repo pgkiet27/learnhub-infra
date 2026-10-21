@@ -28,6 +28,7 @@ env:
   PAYMENT_SERVICE_URL: "http://payment-service:8085"
   AI_SERVICE_URL: "http://ai-service:8000"
   ASSESSMENT_SERVICE_URL: "http://assessment-service:8087"
+  JAEGER_ENDPOINT: "http://jaeger:4318/v1/traces"
 
 secretNames:
   - learnhub-shared-secrets
