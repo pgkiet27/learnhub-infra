@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: pgkiet27/learnhub-course  # image name (will change to ECR URL when in production)
-  tag: bca24a06f4952501a5ec4cfda9a24b8e7b1fc314
+  tag: 2db2e1444bc6302c527b112f20f76effc1c15eae
   pullPolicy: IfNotPresent       # IfNotPresent: only pull if not in node
 
 service:
