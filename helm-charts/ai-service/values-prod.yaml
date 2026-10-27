@@ -27,7 +27,9 @@ env:
   TOP_K_RESULTS: "3"
   ENROLLMENT_SERVICE_URL: "http://enrollment-service:8084"
   ENROLLMENT_CHECK_ENABLED: "true"
-  CHURN_MODEL_BACKEND: "local"
+  # Pod Identity (terraform pod_identity.tf) grants sagemaker:InvokeEndpoint on this endpoint only
+  CHURN_MODEL_BACKEND: "sagemaker"
+  CHURN_SAGEMAKER_ENDPOINT: "learnhub-churn"
   AWS_REGION: "ap-southeast-1"
 
 secretNames:
