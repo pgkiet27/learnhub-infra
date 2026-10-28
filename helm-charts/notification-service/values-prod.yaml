@@ -41,3 +41,6 @@ appSecret:
 
 serviceMonitor:
   enabled: true
+
+autoscaling:
+  enabled: true

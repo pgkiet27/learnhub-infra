@@ -20,7 +20,8 @@ startupProbe:
 
 env:
   SPRING_PROFILES_ACTIVE: "production"
-  DB_URL: "jdbc:postgresql://postgres:5432/user_db?sslmode=require"
+  DB_URL: "jdbc:postgresql://postgres:5432/user_db?sslmode=require&assumeMinServerVersion=9.0"
+  DB_CONNECTION_INIT_SQL: "SELECT 1"
   RABBITMQ_HOST: "rabbitmq"
   RABBITMQ_PORT: "5672"
   REDIS_HOST: "redis"
@@ -32,4 +33,7 @@ secretNames:
   - user-service-db
 
 serviceMonitor:
+  enabled: true
+
+autoscaling:
   enabled: true

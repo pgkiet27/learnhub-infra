@@ -1,0 +1,26 @@
+cloudProvider: aws
+
+# clusterName and awsRegion are passed with --set by up.ps1 / up.sh
+autoDiscovery:
+  clusterName: ""
+
+# Chart 9.59.0 ships 1.35; no 1.37 image is published yet, so use the newest one closest to the cluster version
+image:
+  tag: v1.36.1
+
+rbac:
+  serviceAccount:
+    create: true
+    name: cluster-autoscaler   # matches the Pod Identity association in terraform pod_identity.tf
+
+extraArgs:
+  balance-similar-node-groups: true
+  expander: least-waste
+  skip-nodes-with-local-storage: false
+  scale-down-unneeded-time: 5m
+  scale-down-delay-after-add: 5m
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 128Mi

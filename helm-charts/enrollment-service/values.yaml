@@ -65,3 +65,23 @@ serviceMonitor:
   path: /actuator/prometheus
 
 startupProbe: {}
+
+# HorizontalPodAutoscaler: when enabled the Deployment leaves replicas to the HPA (minReplicas..maxReplicas)
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70   # percent of resources.requests.cpu
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300   # wait 5 minutes of low load before removing pods
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60

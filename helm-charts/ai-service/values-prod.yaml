@@ -38,3 +38,6 @@ secretNames:
 
 appSecret:
   enabled: true
+
+autoscaling:
+  enabled: true

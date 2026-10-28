@@ -47,7 +47,7 @@ spec:
             - |
               set -eu
               apk add --no-cache aws-cli >/dev/null
-              export PGHOST=postgres PGSSLMODE=require
+              export PGHOST=postgres-direct PGSSLMODE=require
               LATEST=$(aws s3 ls "s3://$BACKUP_BUCKET/db/" | awk '{print $2}' | sort | tail -1 | tr -d /)
               echo "Latest backup: ${LATEST:-<none>}"
               for s in identity user course enrollment payment assessment ai; do

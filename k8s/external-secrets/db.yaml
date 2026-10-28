@@ -26,6 +26,11 @@ spec:
     name: aws-secrets-manager
   target:
     name: identity-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
   dataFrom:
     - extract:
         key: learnhub/prod/db/identity
@@ -42,6 +47,11 @@ spec:
     name: aws-secrets-manager
   target:
     name: user-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
   dataFrom:
     - extract:
         key: learnhub/prod/db/user
@@ -58,6 +68,11 @@ spec:
     name: aws-secrets-manager
   target:
     name: course-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
   dataFrom:
     - extract:
         key: learnhub/prod/db/course
@@ -74,6 +89,11 @@ spec:
     name: aws-secrets-manager
   target:
     name: enrollment-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
   dataFrom:
     - extract:
         key: learnhub/prod/db/enrollment
@@ -90,6 +110,11 @@ spec:
     name: aws-secrets-manager
   target:
     name: payment-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
   dataFrom:
     - extract:
         key: learnhub/prod/db/payment
@@ -106,6 +131,11 @@ spec:
     name: aws-secrets-manager
   target:
     name: assessment-service-db
+    template:
+      engineVersion: v2
+      data:
+        DB_USER: "{{ .DB_USER }}"
+        DB_PASSWORD: "{{ .DB_PASSWORD }}"
   dataFrom:
     - extract:
         key: learnhub/prod/db/assessment

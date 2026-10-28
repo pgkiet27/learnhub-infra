@@ -16,3 +16,6 @@ ingress:
     - /
   healthcheckPath: /api/health
   certificateArn: arn:aws:acm:ap-southeast-1:084828583507:certificate/101767d6-3632-427a-97ea-24f7cf91f97b
+
+autoscaling:
+  enabled: true

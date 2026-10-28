@@ -20,7 +20,8 @@ startupProbe:
 
 env:
   SPRING_PROFILES_ACTIVE: "production"
-  DB_URL: "jdbc:postgresql://postgres:5432/assessment_db?sslmode=require"
+  DB_URL: "jdbc:postgresql://postgres:5432/assessment_db?sslmode=require&assumeMinServerVersion=9.0"
+  DB_CONNECTION_INIT_SQL: "SELECT 1"
   JAEGER_ENDPOINT: "http://jaeger:4318/v1/traces"
   COURSE_SERVICE_URL: "http://course-service:8083"
   ENROLLMENT_SERVICE_URL: "http://enrollment-service:8084"
@@ -29,4 +30,7 @@ secretNames:
   - assessment-service-db
 
 serviceMonitor:
+  enabled: true
+
+autoscaling:
   enabled: true

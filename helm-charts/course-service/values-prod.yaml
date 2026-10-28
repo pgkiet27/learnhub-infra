@@ -20,7 +20,9 @@ startupProbe:
 
 env:
   SPRING_PROFILES_ACTIVE: "production"
-  DB_URL: "jdbc:postgresql://postgres:5432/course_db?sslmode=require"
+  DB_URL: "jdbc:postgresql://postgres:5432/course_db?sslmode=require&assumeMinServerVersion=9.0"
+  DB_CONNECTION_INIT_SQL: "SELECT 1"
+  DB_READ_URL: "jdbc:postgresql://postgres-read:5432/course_db?sslmode=require&assumeMinServerVersion=9.0"
   RABBITMQ_HOST: "rabbitmq"
   RABBITMQ_PORT: "5672"
   REDIS_HOST: "redis"
@@ -36,4 +38,7 @@ secretNames:
   - course-service-db
 
 serviceMonitor:
+  enabled: true
+
+autoscaling:
   enabled: true
