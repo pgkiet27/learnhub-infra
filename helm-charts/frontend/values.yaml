@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: pgkiet27/learnhub-frontend
-  tag: 9ec16bacb072fa319846b5a47401d8e24fdaf53e-6-1
+  tag: 9010167f07dd68c8211517497f57bc9d606143c1-7-1
   pullPolicy: IfNotPresent
 
 service:
